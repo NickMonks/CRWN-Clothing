@@ -2,15 +2,12 @@ import './App.css';
 import { Switch, Route } from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from "./pages/shop/shop.component.jsx";
+import Header from './components/header/header.component';
 
-const HatsPage = () => (
-  <div>
-    <h1>HATS PAGE </h1>
-  </div>
-)
 function App() {
   return (
     <div>
+      <Header />
       <Switch>
       {/* Switch is used to only render whichever endpoint is being hit*/}
       {/* history component is only passed to the children, but we need to avoid prop drilling! */}
