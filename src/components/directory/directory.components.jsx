@@ -54,8 +54,9 @@ class Directory extends React.Component {
                 {
                     // we render the menuitem using map
                     //                        \/destructure here
-                    this.state.sections.map(({title, imageUrl, id, size}) => (
-                        <MenuItem key={id} title={title} imageUrl={imageUrl} size={size}/>
+                    // To avoid verbose , ES6 can spread the values adding ..otherSectionProps, which repeats operations of other fields
+                    this.state.sections.map(({id, ...otherSectionProps}) => (
+                        <MenuItem key={id} {...otherSectionProps}/>
                     ))
                 }
             </div>
