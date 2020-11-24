@@ -32,9 +32,10 @@ class SignIn extends React.Component {
         return (
             <div className="sign-in">
                 <h2>I already have an account</h2>
+
                 <span>Sign in with your email and password</span>
                 
-                <label>Email</label>
+                
                 <form onSubmit={this.handleSubmit} >
                     <FormInput 
                         name="email" 
@@ -43,8 +44,7 @@ class SignIn extends React.Component {
                         value={this.state.email} 
                         handleChange={this.handleChange} 
                         required />
-
-                    <label >Password</label>
+                    
                     <FormInput  
                             name="password" 
                             type="password"
@@ -52,8 +52,6 @@ class SignIn extends React.Component {
                             value={this.state.password} 
                             handleChange={this.handleChange}
                             required />
-
-
                     <div className='buttons'>
                         {/* IMPORTANT: because CUstomButton has the type "submit", it will trigger the 
                         onSubmit event, independently of being an input or component. basically means that both are type submit*/}
