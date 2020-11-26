@@ -7,7 +7,8 @@ import './custom-button.styles.scss';
     IMPORTANT: ANYTHING THAT IS PASSED BETWEEN COMPONENT TAGS (like "sign in") is considered children
  */}
 const CustomButton = ({children, isGoogleSignIn,  ...otherProps}) => (
-    <button 
+    <button
+        
         className={`${isGoogleSignIn ? 'google-sign-in': ''} custom-button`} 
         {...otherProps}
         >

@@ -1,30 +1,28 @@
+import { connect } from 'react-redux';
+
 import './App.css';
+
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from "./pages/shop/shop.component.jsx";
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
+import { setCurrentUser } from './redux/user/user.actions';
+
 class App extends React.Component {
-  constructor() {
-    super();
-
-
-    this.state = {
-      // authentication user from firebase
-      currentUser: null
-    }
-
-  }
+ 
 
   unsubscribeFromAuth = null;
 
   // subscription - we just to check when the state has changed - a new user state
   // So we dont want to remount again and manually fetch. 
   // All of this allows us to do OAth, authentication from 3rd parties. 
-  componentDidMount() {                         //       \/ asynchronous because we're doing an API request
+  componentDidMount() {    
+    const {setCurrentUser} = this.props;
+    //       \/ asynchronous because we're doing an API request
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // this method from firebase library takes a function callback with user argument
       // we create profile document:
@@ -35,16 +33,16 @@ class App extends React.Component {
         // In our case, we will subscribe (or "listen") to useRef for any changes of userRef
         // so its an event, and this will setState
         userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
+          setCurrentUser({
+            
               id: snapShot.id,
               ...snapShot.data() // we ask for the rest of the data
-            }
-          })
-        })
+            
+          });
+        });
       } else {
               // if the user is null and left (unmounted):
-              this.setState({currentUser: userAuth});
+              setCurrentUser(userAuth);
       }      
       //createUserProfileDocument(user);
      // authentication persistence - the user will persist, so he will be as a user even if the user refresh or close the window: console.log();
@@ -61,20 +59,42 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
         {/* Switch is used to only render whichever endpoint is being hit*/}
         {/* history component is only passed to the children, but we need to avoid prop drilling! */}
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage}/>
-          <Route path='/signin' component={SignInAndSignUpPage}/>
-  
+          <Route exact path='/signin' render={()=> 
+            // Using render in the router, we can re-render directly on this part of the function
+            // if the currentUser state exists, we dont want to go to the sign in page
+            this.props.currentUser ? (
+            <Redirect to='/'/>
+              ): (
+                <SignInAndSignUpPage />
+                )
+              }
+            />
         </Switch>
-       
       </div>
     );
   }
   
 }
 
-export default App;
+// instead of using state, we destructure the state and take user
+const mapStateToProps = ({user}) => ({
+  currentUser: user.currentUser
+})
+// mapDispatch is used to set the state of header, not to used
+
+const mapDispatchToProps = dispatch => ({
+                          // dispatch fires up the action that is going to happen
+                          // it passes that action to the reducer
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+})          //        Propstostate
+            //          \/
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+  )(App);
