@@ -6,10 +6,15 @@ import './custom-button.styles.scss';
     to it as children to describe what the button does.
     IMPORTANT: ANYTHING THAT IS PASSED BETWEEN COMPONENT TAGS (like "sign in") is considered children
  */}
-const CustomButton = ({children, isGoogleSignIn,  ...otherProps}) => (
+const CustomButton = ({
+    children, 
+    isGoogleSignIn,
+    inverted, // to make the hover-like effect
+      ...otherProps}) => (
     <button
-        
-        className={`${isGoogleSignIn ? 'google-sign-in': ''} custom-button`} 
+        className={`${inverted ? 'inverted': ''} ${
+        isGoogleSignIn ? 'google-sign-in': ''
+        } custom-button`} 
         {...otherProps}
         >
         {children}
