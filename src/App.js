@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 
 import './App.css';
 
@@ -9,7 +8,11 @@ import ShopPage from "./pages/shop/shop.component.jsx";
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import CheckoutPage from './pages/checkout/checkout.component';
 
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from './redux/user/user.selector';
 import { setCurrentUser } from './redux/user/user.actions';
 
 class App extends React.Component {
@@ -65,6 +68,8 @@ class App extends React.Component {
         {/* history component is only passed to the children, but we need to avoid prop drilling! */}
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage}/>
+          <Route exact path='/checkout' component={CheckoutPage}/>
+
           <Route exact path='/signin' render={()=> 
             // Using render in the router, we can re-render directly on this part of the function
             // if the currentUser state exists, we dont want to go to the sign in page
@@ -83,8 +88,8 @@ class App extends React.Component {
 }
 
 // instead of using state, we destructure the state and take user
-const mapStateToProps = ({user}) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector ({
+  currentUser: selectCurrentUser
 })
 // mapDispatch is used to set the state of header, not to used
 
