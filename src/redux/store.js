@@ -9,7 +9,12 @@ import {persistStore} from 'redux-persist';
 
 import rootReducer from './root-reducer';
 
-const middlewares = [logger];
+const middlewares = [];
+
+// to avoid logger in production:
+if (process.env.NODE_ENV==='development') {
+    middlewares.push(logger);
+}
 
 // create store - takes a rootreducer, and all the middlewares (that's why we spread the array )
 // this is done everytime we re-render. we create a new store.
