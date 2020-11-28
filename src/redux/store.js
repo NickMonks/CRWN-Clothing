@@ -4,12 +4,17 @@ import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 // It allows log the redux
 
+import {persistStore} from 'redux-persist';
+// is a function 
+
 import rootReducer from './root-reducer';
 
 const middlewares = [logger];
 
 // create store - takes a rootreducer, and all the middlewares (that's why we spread the array )
 // this is done everytime we re-render. we create a new store.
-const store = createStore(rootReducer, applyMiddleware(...middlewares));
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
-export default store;
+// this will create a persist version of our store; 
+export const persistor = persistStore(store);
+export default { store, persistor };
