@@ -9,7 +9,9 @@ const StripeCheckoutButton = ({price}) => {
         console.log(token);
         alert('Payment Successful');
     }
-
+    // React requires a set of bindings to connect with stripe
+    // so we use the react-stripe-checkout wrapper to achieve this
+    // 
     return (
         <StripeCheckout 
             label = 'Pay Now'

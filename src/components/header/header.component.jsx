@@ -13,39 +13,45 @@ import {ReactComponent as Logo} from '../../assets/crown.svg';
 // selectors
 import { selectCartHidden } from '../../redux/cart/cart.selectors'
 import { selectCurrentUser } from '../../redux/user/user.selector';
-import './header.styles.scss';
+
+// CSS in JS:
+import {    HeaderContainer, 
+            LogoContainer, 
+            OptionsContainer,
+             OptionLink } from "./header.styles.jsx";
 
 const Header = ({currentUser, hidden}) => (
-    <div className='header'>
-        <Link to="/">
+    <HeaderContainer>
+        <LogoContainer to="/">
             <Logo className='logo' />
-        </Link>
-        <div className="options">
-            <Link className='option' to="/shop">
+        </LogoContainer>
+        <OptionsContainer>
+            <OptionLink to="/shop">
                 SHOP
-            </Link>
-            <Link className='option' to="/shop">
+            </OptionLink>
+            <OptionLink to="/shop">
                 CONTACT
-            </Link>
+            </OptionLink>
             {
                 // Here we put a ternary operator. When the currenUser exists, then we set a synthetic event
                 // onClick that fires up auth.signOut from firebase. 
                 currentUser ?
-                (<div className='option' onClick={() => auth.signOut()}> 
+                // You can also change the type of object used as keyword
+                (<OptionLink as='div' onClick={() => auth.signOut()}> 
                 SIGN OUT 
-                </div>
+                </OptionLink>
                 ): (
-                <Link className='option' to ='/signin'>
+                <OptionLink to ='/signin'>
                     SIGN IN
-                </Link>
+                </OptionLink>
                 )}
                 <CartIcon />
-        </div>
+        </OptionsContainer>
         {   // render the card-dropdown if it's not null
             hidden ? null : 
             <CartDropdown />
         }
-    </div>
+    </ HeaderContainer>
 );
                 //        \/ we take the root reducer
                 // this will return us an object {} rootReducer. 
