@@ -1,19 +1,21 @@
 
 import './App.css';
-
 import React from 'react';
+
 import { Switch, Route, Redirect } from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from "./pages/shop/shop.component.jsx";
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import CheckoutPage from './pages/checkout/checkout.component';
+
+import { auth, createUserProfileDocument, addCollectionAndItems } from './firebase/firebase.utils';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCollections, selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
 class App extends React.Component {
  
@@ -23,8 +25,12 @@ class App extends React.Component {
   // subscription - we just to check when the state has changed - a new user state
   // So we dont want to remount again and manually fetch. 
   // All of this allows us to do OAth, authentication from 3rd parties. 
-  componentDidMount() {    
-    const {setCurrentUser} = this.props;
+  componentDidMount() {  
+    
+    // Since we just want to store the database only once, we do it when the app mounts
+    // and then we add our Javascript JSON object. 
+    const {setCurrentUser/*, collectionsArray */ } = this.props;
+
     //       \/ asynchronous because we're doing an API request
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // this method from firebase library takes a function callback with user argument
@@ -45,7 +51,9 @@ class App extends React.Component {
         });
       } else {
               // if the user is null and left (unmounted):
-              setCurrentUser(userAuth);
+              setCurrentUser(userAuth); 
+              // Uncomment if you want to re-create firestore                                                    We extract the properties that we want, so we map to create an array of two objects: title and items.                                     
+              //addCollectionAndItems('collections', collectionsArray.map(({title, items})=>({title,items})));
       }      
       //createUserProfileDocument(user);
      // authentication persistence - the user will persist, so he will be as a user even if the user refresh or close the window: console.log();
@@ -90,6 +98,8 @@ class App extends React.Component {
 // instead of using state, we destructure the state and take user
 const mapStateToProps = createStructuredSelector ({
   currentUser: selectCurrentUser
+  // Uncomment if you want to re-create firestore
+  //collectionsArray: selectCollectionsForPreview
 })
 // mapDispatch is used to set the state of header, not to used
 

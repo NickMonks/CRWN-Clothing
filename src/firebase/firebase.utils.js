@@ -39,6 +39,42 @@ const config = {
     return userRef; // We return the user in case we will used it chained. 
   }
 
+  export const addCollectionAndItems = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey); // returns a collection with id:collectionKey
+    console.log(collectionRef)
+
+    // we need to create a batch request, so we had all the users at once (not risking of only copying a few and then raise an error)
+    const batch = firestore.batch();
+
+    objectsToAdd.forEach(obj => {
+      const newDocRef = collectionRef.doc(); // we will create a new collectionRef
+      batch.set(newDocRef, obj)
+     });
+
+     // we commit the entire batch
+     return await batch.commit();
+  };
+
+  export const convertCollectionsSnapshotToMap = (collections) => {
+    const transformedCollection = collections.docs.map((doc) => {
+      const { title, items } = doc.data();
+  
+      return {
+        routeName: encodeURI(title.toLowerCase()),
+        id: doc.id,
+        title,
+        items,
+      };
+    });
+
+    // We finally use reduce to create a hash map, accumulating the variable,
+    // similar to the data store in firestore.
+    return transformedCollection.reduce((accumulator,collection) => {
+      accumulator[collection.title.toLowerCase()] = collection;
+      return accumulator;
+    }, {})
+  } 
+
   firebase.initializeApp(config);
 
   export const auth = firebase.auth();

@@ -25,13 +25,12 @@ export const selectCollection = memoize((collectionUrlParam) =>
     //(collections) => collections.find(collection => (collection.id === COLLECTION_ID_MAP[collectionUrlParam]))
     // However find is not optimal; imagine if we had thousands of collections and the very end is our object. It will take longer
     // We need to do data normalization: 
-    collections => collections[collectionUrlParam]
-  )
-);
+    collections => collections ? collections[collectionUrlParam] : null
+));
 
 // Collections-Overview still needs the array format for map, so we can convert
 // the hash table into an array
 export const selectCollectionsForPreview = createSelector(
   [selectCollections],                    // map will evaluate for each key (mens,jackets, etc) the collection, and add them into the array
-  collections => Object.keys(collections).map(key => collections[key])
+  collections => collections ? Object.keys(collections).map(key => collections[key]) : []
 )
