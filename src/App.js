@@ -32,6 +32,7 @@ class App extends React.Component {
     const {setCurrentUser/*, collectionsArray */ } = this.props;
 
     //       \/ asynchronous because we're doing an API request
+    // As a side note, this is an observable pattern - the function passed is the next, but we could add error and continue
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // this method from firebase library takes a function callback with user argument
       // we create profile document:

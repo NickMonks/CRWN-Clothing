@@ -33,4 +33,15 @@ export const selectCollection = memoize((collectionUrlParam) =>
 export const selectCollectionsForPreview = createSelector(
   [selectCollections],                    // map will evaluate for each key (mens,jackets, etc) the collection, and add them into the array
   collections => collections ? Object.keys(collections).map(key => collections[key]) : []
+);
+
+export const selectIsCollectionFetching = createSelector(
+  [selectShop],
+  shop => shop.isFetching
+)
+
+
+export const selectIsCollectionLoaded = createSelector(
+  [selectShop],
+  shop => !!shop.collections // this will return falsey values from any time
 )

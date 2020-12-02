@@ -5,11 +5,12 @@ import logger from 'redux-logger';
 // It allows log the redux
 
 import {persistStore} from 'redux-persist';
-// is a function 
+import thunk from 'redux-thunk';
 
 import rootReducer from './root-reducer';
 
-const middlewares = [];
+// we add the thunk in the middleware
+const middlewares = [thunk];
 
 // to avoid logger in production:
 if (process.env.NODE_ENV==='development') {
