@@ -75,6 +75,16 @@ const config = {
     }, {})
   } 
 
+  export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = auth.onAuthStateChanged(userAuth => {
+        unsubscribe();
+        resolve(userAuth);
+      }, reject)
+    })
+  } 
+
+
   firebase.initializeApp(config);
 
   export const auth = firebase.auth();
@@ -82,13 +92,13 @@ const config = {
 
   //Google authentication
   
-  const provider = new firebase.auth.GoogleAuthProvider();
+  export const googleProvider = new firebase.auth.GoogleAuthProvider();
 
   // we want to trigger the google authentication when is selected
-  provider.setCustomParameters({prompt: 'select_account'});
+  googleProvider.setCustomParameters({prompt: 'select_account'});
   
   // signInwithgoogle is a callback function that provides the authentication with a popup. 
-  export const signInWithGoogle = () => auth.signInWithPopup(provider);
+  export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
   // We need to habilitate the firebase to allow google popups
   export default firebase;

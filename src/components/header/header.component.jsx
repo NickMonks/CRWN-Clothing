@@ -1,18 +1,16 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-// In order to pull the currenUser state from redux, we import a HOC that takes components as inputs
-// This will connect the component to the redux store
+
 import {connect} from 'react-redux';
-//
+
 import {createStructuredSelector} from 'reselect';
 
-import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 import {ReactComponent as Logo} from '../../assets/crown.svg';
 // selectors
 import { selectCartHidden } from '../../redux/cart/cart.selectors'
 import { selectCurrentUser } from '../../redux/user/user.selector';
+import { signOutStart  } from '../../redux/user/user.actions';
 
 // CSS in JS:
 import {    HeaderContainer, 
@@ -37,7 +35,7 @@ const Header = ({currentUser, hidden}) => (
                 // onClick that fires up auth.signOut from firebase. 
                 currentUser ?
                 // You can also change the type of object used as keyword
-                (<OptionLink as='div' onClick={() => auth.signOut()}> 
+                (<OptionLink as='div' onClick={signOutStart}> 
                 SIGN OUT 
                 </OptionLink>
                 ): (
@@ -70,7 +68,16 @@ const Header = ({currentUser, hidden}) => (
     hidden: selectCartHidden
 });
 
+const mapDispatchToProps = dispatch => ({
+    signOutStart: () => dispatch(signOutStart())
+  });
+  
+ 
+
 // We use currying - call the connect function, which gives a HOC, and then we add the Header component.
 // first argument will be the state of the root reducer
 // So: export -> function connect, which let us have access to states from redux, and then add as an argument Header. 
-export default connect(mapStateToProps)(Header);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Header);
