@@ -10,8 +10,9 @@ import './collection.styles.scss';
 
 // Inside this category, whenever we hit shops/x, the match.param.categoryId=x
 const CollectionPage = ({ collection }) => {
+    
+    
     const { title, items } = collection;
-    console.log(collection)
     return (
     <div className='collection-page'>
         <h2 className='title'>{title}</h2>

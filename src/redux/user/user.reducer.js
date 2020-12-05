@@ -11,12 +11,13 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case UserActionTypes.SIGN_IN_SUCCESS:
+        case UserActionTypes.SIGN_UP_SUCCESS:
             return {
                 ...state, // Important: when we spread the state and later the property of interest it will overload it
                 currentUser: action.payload,
                 error: null // to clean any errors that may have appear
             };
-        case UserActionTypes.SIGN_IN_SUCCESS:
+        case UserActionTypes.SIGN_OUT_SUCCESS:
             return {
                 ...state,
                 currentUser: null,

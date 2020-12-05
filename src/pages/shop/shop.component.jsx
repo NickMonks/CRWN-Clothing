@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
@@ -13,46 +13,37 @@ import CollectionPageContainer from '../collection/collection.container';
 //onst CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
 //const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
-class ShopPage extends React.Component {
+const ShopPage = ({fetchCollectionsStart,match}) => {
     
-  
-  
-  unsubscribeFromSnapshot = null;
-  /* Because the componentDidMount is the only that can give us the info that the app as loaded,
-  We should wrap there our Spinner*/
-  componentDidMount() {
-    const {fetchCollectionsStart} = this.props;
+  useEffect(()=>{
     fetchCollectionsStart();
+  },[fetchCollectionsStart]);
+  // we need to be careful, since if we don't provide arguments the shoppage will render twice, once
+  // due to the app.js render (the first render of all components), and a second one in case a currentUser is changed 
 
-  }
+    return (
+        <div className='shop-page'>
+        <Route exact path={`${match.path}`} 
+                      component={CollectionsOverviewContainer}
+                      // A container is replaced so that we can separate the responsabilities
+                      // from isCollectionFetched, and basically connect all elements together
+                      />
+        <Route path={`${match.path}/:collectionId`} 
+                      component={CollectionPageContainer}
+                      
+                      //render={(props) => 
+                      // <CollectionPageWithSpinner
+                      // If collection is not loaded, then this will be set to true
+                      // and tell the spinner to render ( the problem is if we re-load the webpage
+                      // we will see that the isLoading is re-set to false), so we need to use this parameter
 
-    render () {
-        const {match} = this.props;
-      
-
-        return (
-            <div className='shop-page'>
-            <Route exact path={`${match.path}`} 
-                          component={CollectionsOverviewContainer}
-                          // A container is replaced so that we can separate the responsabilities
-                          // from isCollectionFetched, and basically connect all elements together
-                          />
-            <Route path={`${match.path}/:collectionId`} 
-                          component={CollectionPageContainer}
-                          
-                          //render={(props) => 
-                         // <CollectionPageWithSpinner
-                          // If collection is not loaded, then this will be set to true
-                          // and tell the spinner to render ( the problem is if we re-load the webpage
-                          // we will see that the isLoading is re-set to false), so we need to use this parameter
-
-                         // isLoading={!isCollectionLoaded} {...props} />} 
-                          />  
-            
-        </div>
-        )
+                      // isLoading={!isCollectionLoaded} {...props} />} 
+                      />  
+        
+    </div>
+    )
 };
-}  /* it provides us the current endpoint ,/shop for example*/
+/* it provides us the current endpoint ,/shop for example*/
   
 
 const mapDispatchToProps = (dispatch) => ({

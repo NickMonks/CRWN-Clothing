@@ -86,14 +86,7 @@ export function* signUp({ payload: { email,password,displayName }}){
     try{
         const {user} = yield auth.createUserWithEmailAndPassword(email, password);
         yield put(signUpSuccess({ user, additionalData:{ displayName } }))
-            // await createUserProfileDocument(user, {displayName});
-            // // We clean the form if successful
-            // this.setState({
-            //     displayName: '',
-            //     email: '',
-            //     password: '',
-            //     confirmPassword:''
-            // })
+            
     } catch(error){
         yield put(signUpFailure(error))
 
@@ -129,7 +122,7 @@ export function* onSignUpStart() {
 }
 
 export function* onSignUpSuccess() {
-    yield takeLatest(UserActionTypes.SIGN_OUT_SUCCESS, signInAfterSignUp )
+    yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp )
 }
 
 
